@@ -164,8 +164,9 @@ with open('address.txt','w') as file:
             # if element.find('span') != None or element.find('span').text == 'Кухня:':
             if element.text == 'Кухня:':
                 print("Нашли span с текстом 'Кухня', останавливаемся")
-                Type_Bath.pop(0)
-                Type_Bath.pop(-1)
+                if len(Type_Bath) > 1:
+                    Type_Bath.pop(0)
+                    Type_Bath.pop(-1)
                 Type_Bath = ', '.join(Type_Bath)
                 break
             else:
