@@ -157,22 +157,22 @@ with open('address.txt','w') as file:
 
         test_all = soup.find('div', class_='formserv').find_all()
 
-
+        Type_Bath = []
         for element in test_all:
             print(element)
+            # Type_Bath = []
             # if element.find('span') != None or element.find('span').text == 'Кухня:':
             if element.text == 'Кухня:':
                 print("Нашли span с текстом 'Кухня', останавливаемся")
+                Type_Bath.pop(0)
+                Type_Bath.pop(-1)
+                Type_Bath = ', '.join(Type_Bath)
                 break
             else:
                 print(element.text)
+                Type_Bath.append(element.text)
+                print(Type_Bath)
 
-        content = ''
-        for span in service_list2:
-            if span == 'Кухня':
-                break
-            content += str(span)
-        print(content)
 
 
 
@@ -219,6 +219,7 @@ with open('address.txt','w') as file:
         worksheet.cell(row=idx+1, column=3).value = service_list
         worksheet.cell(row=idx+1, column=4).value = details_list
         worksheet.cell(row=idx+1, column=5).value = many
+        worksheet.cell(row=idx+1, column=6).value = Type_Bath
 
 
         time.sleep(0.2)
