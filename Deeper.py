@@ -146,19 +146,59 @@ with open('address.txt','w') as file:
         descript_list = soup.find('div', class_='pad1det').text
         service_list = soup.find('div', class_='formserv').text
         service_list2 = soup.find_all(class_='formserv')
-        print(service_list2)
+        service_list3 = soup.find("span", class_= "servgrp", string="Кухня:")
+        service_list4 = soup.find("span", class_= "servgrp").text
+        service_a = soup.find('div', class_='formserv').a
 
-        for i in range(len(service_list2)):
-            if i == len(service_list2) - 1:
-                result = service_list2[i].next_sibling.strip()
+
+        # nextele = service_a.find_next_siblings("a")
+        # for next in nextele:
+        #     print(next.text)
+
+        test_all = soup.find('div', class_='formserv').find_all()
+
+
+        for element in test_all:
+            print(element)
+            # if element.find('span') != None or element.find('span').text == 'Кухня:':
+            if element.text == 'Кухня:':
+                print("Нашли span с текстом 'Кухня', останавливаемся")
+                break
             else:
-                result = service_list2[i].next_sibling
-                while result and result.name == 'br':
-                    result = result.next_sibling
-                if result:
-                    result = result.strip()
-            print(result)
-            worksheet.cell(row=idx + 1, column=6).value = result
+                print(element.text)
+
+        content = ''
+        for span in service_list2:
+            if span == 'Кухня':
+                break
+            content += str(span)
+        print(content)
+
+
+
+
+        # for i in range(len(service_list2)):
+        #     if i == len(service_list2) - 1:
+        #         result = service_list2[i].next_sibling.strip()
+        #         print(result)
+        #     else:
+        #         result = service_list2[i].next_sibling
+        #         while result and result.name == 'br':
+        #             result = result.next_sibling
+        #         if result:
+        #             result = result.strip()
+        #     print(result)
+        #     worksheet.cell(row=idx + 1, column=6).value = result
+
+        # content = ''
+        # kitchen_span = soup.find('span', text='Кухня:')
+        # if kitchen_span:
+        #     kitchen_div = kitchen_span.find_parent('div')
+        #     content = kitchen_div.previous_sibling
+        #     while content and content.name != 'Кухня':
+        #         if hasattr(content, 'text'):
+        #             print(content.text.strip())
+        #         content = content.previous_sibling
 
 
         details_list = soup.find('div', class_='detailright1').text
@@ -198,3 +238,5 @@ with open('address.txt','w') as file:
         # # bath_price = div.find('div', class_='starn sel').text
         #     bath_stars = len(div.find_all('div', {'class': 'starn sel'}))
         #     print(bath_address)
+
+
