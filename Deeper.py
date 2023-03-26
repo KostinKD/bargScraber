@@ -157,22 +157,79 @@ with open('address.txt','w') as file:
 
         test_all = soup.find('div', class_='formserv').find_all()
 
+
         Type_Bath = []
-        for element in test_all:
+        Type_Kitchen = []
+        Type_Service = []
+        Type_Services = []
+        start = False
+        for element in reversed(test_all):
             print(element)
-            # Type_Bath = []
-            # if element.find('span') != None or element.find('span').text == 'Кухня:':
-            if element.text == 'Кухня:':
-                print("Нашли span с текстом 'Кухня', останавливаемся")
-                if len(Type_Bath) > 1:
-                    Type_Bath.pop(0)
-                    Type_Bath.pop(-1)
-                Type_Bath = ', '.join(Type_Bath)
+            start = True
+            if element.text == 'Сервис:':
+                start = False
+                if len(Type_Services) > 1:
+                    Type_Services.reverse()
+                Type_Services = ', '.join(Type_Services)
+                print(Type_Services)
+                worksheet.cell(row=idx + 1, column=9).value = Type_Services
                 break
-            else:
-                print(element.text)
-                Type_Bath.append(element.text)
-                print(Type_Bath)
+            if start:
+                Type_Services.append(element.text)
+                print(Type_Services)
+            # # Type_Bath = []
+            # Scrabing TYPE OF BATHS
+            # if element.text == 'Кухня:':
+            #     print("Нашли span с текстом 'Кухня', останавливаемся")
+            #     if len(Type_Bath) > 1:
+            #         Type_Bath.pop(0)
+            #         Type_Bath.pop(-1)
+            #     Type_Bath = ', '.join(Type_Bath)
+            #     break
+            # else:
+            #     print(element.text)
+            #     Type_Bath.append(element.text)
+            #     print(Type_Bath)
+
+
+        #     SCARGIN KITCHEN
+        #     if element.text == 'Кухня:':
+        #         print('Scrab kitchen now')
+        #         start = True
+        #     elif element.text == 'Услуги:':
+        #         start = False
+        #         if len(Type_Kitchen) > 1:
+        #             Type_Kitchen.pop(0)
+        #             Type_Kitchen.pop(-1)
+        #         Type_Kitchen = ', '.join(Type_Kitchen)
+        #         print(Type_Kitchen)
+        #         worksheet.cell(row=idx + 1, column=7).value = Type_Kitchen
+        #         break
+        #     if start:
+        #         Type_Kitchen.append(element.text)
+        #         print(Type_Kitchen)
+
+
+        #         SCRABER SERVICE
+        #     if element.text == 'Услуги:':
+        #         print('Scrab service now')
+        #         start = True
+        #     elif element.text == 'Сервис:':
+        #         start = False
+        #         if len(Type_Service) > 1:
+        #             Type_Service.pop(0)
+        #             Type_Service.pop(-1)
+        #         Type_Service = ', '.join(Type_Service)
+        #         print(Type_Service)
+        #         worksheet.cell(row=idx + 1, column=8).value = Type_Service
+        #         break
+        #     if start:
+        #         Type_Service.append(element.text)
+        #         print(Type_Service)
+
+
+
+
 
 
 
@@ -220,10 +277,11 @@ with open('address.txt','w') as file:
         worksheet.cell(row=idx+1, column=3).value = service_list
         worksheet.cell(row=idx+1, column=4).value = details_list
         worksheet.cell(row=idx+1, column=5).value = many
-        worksheet.cell(row=idx+1, column=6).value = Type_Bath
+        # worksheet.cell(row=idx+1, column=6).value = Type_Bath
 
 
-        time.sleep(0.2)
+
+        time.sleep(0.7)
         workbook.save(filename="output2.xlsx")
 
 
