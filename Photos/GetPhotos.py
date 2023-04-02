@@ -3,6 +3,8 @@ import os
 import requests
 import openpyxl
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+import urllib.request
 import time
 
 # Make a GET request to fetch the raw HTML content
@@ -147,9 +149,11 @@ with open('../address.txt', 'w') as file:
         # addr_list = soup.find('div', id_='addrsmall3').text
 
         folder_name = soup.find('div', {'id':'contnt'}).find('h1').text
-        os.makedirs(folder_name.replace('"',''))
-
-        find_photo = soup.find('div', class_='formphotos').a
+        folder_path = folder_name.replace('"','')
+        os.makedirs(folder_path)
+        file_path = os.path.join(folder_path)
+        find_photo = soup.find('div', class_='formphotos')
+        find_class = find_photo.find_all('a', {'class': 'big'})
 
 
         # nextele = service_a.find_next_siblings("a")
@@ -164,8 +168,19 @@ with open('../address.txt', 'w') as file:
         Type_Service = []
         Type_Services = []
 
-        for photo in find_photo:
-            print(photo['src'])
+        for photo in find_class:
+            href = photo.get('href')
+            url = 'https://бани.рф' + href
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+                "Accept-Encoding": "*",
+                "Connection": "keep-alive"}
+            response = requests.get(url,headers=headers).content
+            # urllib.request.urlretrieve(url, 'img1.jpg')
+            file_name = href.split('/')[-1]
+            with open(os.path.join(folder_path,file_name), 'wb') as f:
+                f.write(response)
+            print(photo)
 
             # worksheet.cell(row=idx + 1, column=9).value = Type_Services
 
