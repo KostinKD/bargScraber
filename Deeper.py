@@ -128,7 +128,11 @@ ursl = [
 'https://бани.рф/%D0%B1%D0%B0%D0%BD%D1%8F/%D0%A6%D0%B0%D1%80%D0%B8%D1%86%D1%8B%D0%BD%D1%81%D0%BA%D0%B8%D0%B5-%D0%B1%D0%B0%D0%BD%D0%B8-%D0%B2-%D0%A2%D0%A6-%D0%A6%D0%B0%D1%80%D0%B8%D1%86%D1%8B%D0%BD%D0%BE/'
         ]
 
+with open('./Ekaterenburg/URLs.txt','r', encoding="utf-8") as f:
+    lines = f.read().split(',')
 
+ursl = [line.strip() for line in lines]
+print(ursl)
 
 
 with open('address.txt','w') as file:
@@ -142,12 +146,13 @@ with open('address.txt','w') as file:
         soup = BeautifulSoup(page.content, "html.parser")
 
         # addr_list = soup.find_all('div', attrs={'class':'addrsmall3'})
+        name_bath = soup.find('div', {'id':'contnt'}).h1.text
         addr_list = soup.find('div', class_='addrsmall3').text
         descript_list = soup.find('div', class_='pad1det').text
         service_list = soup.find('div', class_='formserv').text
         service_list2 = soup.find_all(class_='formserv')
         service_list3 = soup.find("span", class_= "servgrp", string="Кухня:")
-        service_list4 = soup.find("span", class_= "servgrp").text
+        # service_list4 = soup.find("span", class_= "servgrp").text
         service_a = soup.find('div', class_='formserv').a
 
 
@@ -158,33 +163,36 @@ with open('address.txt','w') as file:
         test_all = soup.find('div', class_='formserv').find_all()
 
 
+
         Type_Bath = []
         Type_Kitchen = []
         Type_Service = []
         Type_Services = []
         start = False
-        for element in reversed(test_all):
+        for element in test_all:
             print(element)
             start = True
-            if element.text == 'Сервис:':
-                start = False
-                if len(Type_Services) > 1:
-                    Type_Services.reverse()
-                Type_Services = ', '.join(Type_Services)
-                print(Type_Services)
-                worksheet.cell(row=idx + 1, column=9).value = Type_Services
-                break
-            if start:
-                Type_Services.append(element.text)
-                print(Type_Services)
-            # # Type_Bath = []
-            # Scrabing TYPE OF BATHS
+            # if element.text == 'Сервис:':
+            #     start = False
+            #     if len(Type_Services) > 1:
+            #         Type_Services.reverse()
+            #     Type_Services = ', '.join(Type_Services)
+            #     print(Type_Services)
+            #     worksheet.cell(row=idx + 1, column=9).value = Type_Services
+            #     break
+            # if start:
+            #     Type_Services.append(element.text)
+            #     print(Type_Services)
+
+            # Type_Bath = []
+            # # Scrabing TYPE OF BATHS
             # if element.text == 'Кухня:':
             #     print("Нашли span с текстом 'Кухня', останавливаемся")
             #     if len(Type_Bath) > 1:
             #         Type_Bath.pop(0)
             #         Type_Bath.pop(-1)
             #     Type_Bath = ', '.join(Type_Bath)
+            #     worksheet.cell(row=idx + 1, column=9).value = Type_Services
             #     break
             # else:
             #     print(element.text)
@@ -192,7 +200,43 @@ with open('address.txt','w') as file:
             #     print(Type_Bath)
 
 
-        #     SCARGIN KITCHEN
+            # Type_Bath = []
+
+
+
+            if element.text == 'Кухня:':
+                print("Нашли span с текстом 'Кухня', останавливаемся")
+                if len(Type_Bath) > 1:
+                    Type_Bath.pop(0)
+                    Type_Bath.pop(-1)
+                Type_Bath = ', '.join(Type_Bath)
+                worksheet.cell(row=idx + 1, column=7).value = Type_Bath
+                break
+            else:
+                print(element.text)
+                Type_Bath.append(element.text)
+                print(Type_Bath)
+
+            # for element in test_all:
+            #     print(element)
+            #     # Type_Bath = []
+            #     # if element.find('span') != None or element.find('span').text == 'Кухня:':
+            #     if element.text == 'Кухня:':
+            #         print("Нашли span с текстом 'Кухня', останавливаемся")
+            #         Type_Bath.pop(0)
+            #         Type_Bath.pop(-1)
+            #         if len(Type_Bath) > 1:
+            #             Type_Bath.pop(0)
+            #             Type_Bath.pop(-1)
+            #         Type_Bath = ', '.join(Type_Bath)
+            #         worksheet.cell(row=idx + 1, column=7).value = Type_Bath
+            #         break
+            #     else:
+            #         print(element.text)
+            #         Type_Bath.append(element.text)
+            #         print(Type_Bath)
+
+        # #     SCARGIN KITCHEN
         #     if element.text == 'Кухня:':
         #         print('Scrab kitchen now')
         #         start = True
@@ -226,14 +270,6 @@ with open('address.txt','w') as file:
         #     if start:
         #         Type_Service.append(element.text)
         #         print(Type_Service)
-
-
-
-
-
-
-
-
 
         # for i in range(len(service_list2)):
         #     if i == len(service_list2) - 1:
@@ -269,19 +305,16 @@ with open('address.txt','w') as file:
             pass
 
 
+        worksheet.cell(row=idx+1, column=1).value = name_bath
+        worksheet.cell(row=idx+1, column=2).value = url
+        worksheet.cell(row=idx+1, column=3).value = addr_list
+        worksheet.cell(row=idx+1, column=4).value = descript_list
+        worksheet.cell(row=idx+1, column=5).value = service_list
+        worksheet.cell(row=idx+1, column=6).value = details_list
+        worksheet.cell(row=idx+1, column=7).value = many
+        worksheet.cell(row=idx+1, column=8).value = Type_Bath
 
-
-
-        worksheet.cell(row=idx+1, column=1).value = addr_list
-        worksheet.cell(row=idx+1, column=2).value = descript_list
-        worksheet.cell(row=idx+1, column=3).value = service_list
-        worksheet.cell(row=idx+1, column=4).value = details_list
-        worksheet.cell(row=idx+1, column=5).value = many
-        # worksheet.cell(row=idx+1, column=6).value = Type_Bath
-
-
-
-        time.sleep(0.7)
+        time.sleep(0.9)
         workbook.save(filename="output2.xlsx")
 
 
