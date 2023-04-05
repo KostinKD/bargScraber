@@ -141,7 +141,7 @@ ursl = [
 # Уфа
 # Челябинск
 
-with open('./Shelabinsk/URLs.txt','r', encoding="utf-8") as f:
+with open('./Omsk/URLs.txt','r', encoding="utf-8") as f:
     lines = f.read().split(',')
 
 ursl = [line.strip() for line in lines]
@@ -193,17 +193,17 @@ with open('address.txt','w') as file:
             print(element)
             start = True
             ########################### SERVICE СЕРВИС (WORK) -> addd reversed to test_all
-            if element.text == 'Сервис:':
-                start = False
-                if len(Type_Services) > 1:
-                    Type_Services.reverse()
-                Type_Services = ', '.join(Type_Services)
-                print(Type_Services)
-                worksheet.cell(row=idx + 1, column=9).value = Type_Services
-                break
-            if start:
-                Type_Services.append(element.text)
-                print(Type_Services)
+            # if element.text == 'Сервис:':
+            #     start = False
+            #     if len(Type_Services) > 1:
+            #         Type_Services.reverse()
+            #     Type_Services = ', '.join(Type_Services)
+            #     print(Type_Services)
+            #     worksheet.cell(row=idx + 1, column=9).value = Type_Services
+            #     break
+            # if start:
+            #     Type_Services.append(element.text)
+            #     print(Type_Services)
 
             # Type_Bath = []
             # # Scrabing TYPE OF BATHS
@@ -223,18 +223,18 @@ with open('address.txt','w') as file:
 
 
             ###########################TYPE OF BATH(WORK)
-            # if element.text in ['Кухня:', 'Услуги:', 'Сервис:']:
-            #     # print("Нашли span с текстом 'Кухня', останавливаемся")
-            #     if len(Type_Bath) > 1:
-            #         Type_Bath.pop(0)
-            #         Type_Bath.pop(-1)
-            #     Type_Bath = ', '.join(Type_Bath)
-            #     # worksheet.cell(row=idx + 1, column=7).value = Type_Bath
-            #     break
-            # else:
-            #     # print(element.text)
-            #     Type_Bath.append(element.text)
-            #     print(Type_Bath)
+            if element.text in ['Кухня:', 'Услуги:', 'Сервис:']:
+                # print("Нашли span с текстом 'Кухня', останавливаемся")
+                if len(Type_Bath) > 1:
+                    Type_Bath.pop(0)
+                    Type_Bath.pop(-1)
+                Type_Bath = ', '.join(Type_Bath)
+                # worksheet.cell(row=idx + 1, column=7).value = Type_Bath
+                break
+            else:
+                # print(element.text)
+                Type_Bath.append(element.text)
+                print(Type_Bath)
             ###############################
 
             # for element in test_all:
@@ -330,11 +330,11 @@ with open('address.txt','w') as file:
         worksheet.cell(row=idx+1, column=2).value = url
         worksheet.cell(row=idx+1, column=3).value = addr_list
         worksheet.cell(row=idx+1, column=4).value = descript_list
-        # try:
-        #     worksheet.cell(row=idx+1, column=5).value = Type_Bath
-        # except Exception as e:
-        #     print(e)
-        #     continue
+        try:
+            worksheet.cell(row=idx+1, column=5).value = Type_Bath
+        except Exception as e:
+            print(e)
+            continue
         worksheet.cell(row=idx+1, column=6).value = details_list
         # worksheet.cell(row=idx+1, column=7).value = many
         # worksheet.cell(row=idx+1, column=8).value = Type_Bath
