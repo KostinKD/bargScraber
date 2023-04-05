@@ -136,7 +136,7 @@ from PIL import Image
 # 'https://бани.рф/%D0%B1%D0%B0%D0%BD%D1%8F/%D0%A6%D0%B0%D1%80%D0%B8%D1%86%D1%8B%D0%BD%D1%81%D0%BA%D0%B8%D0%B5-%D0%B1%D0%B0%D0%BD%D0%B8-%D0%B2-%D0%A2%D0%A6-%D0%A6%D0%B0%D1%80%D0%B8%D1%86%D1%8B%D0%BD%D0%BE/'
 #         ]
 
-with open('../Shelabinsk/URLs.txt','r', encoding="utf-8") as f:
+with open('../Moscow/URLs.txt','r', encoding="utf-8") as f:
     lines = f.read().split(',')
 
 ursl = [line.strip() for line in lines]
@@ -159,7 +159,11 @@ with open('../address.txt', 'w') as file:
 
         folder_name = soup.find('div', {'id':'contnt'}).find('h1').text
         folder_path = folder_name.replace('"','')
-        os.makedirs(folder_path)
+        try:
+            os.makedirs(folder_path)
+        except Exception as e:
+            print(e)
+            continue
         file_path = os.path.join(folder_path)
         find_photo = soup.find('div', class_='formphotos')
         find_class = find_photo.find_all('a', {'class': 'big'})
@@ -247,7 +251,6 @@ with open('../address.txt', 'w') as file:
 
 
         time.sleep(0.7)
-        workbook.save(filename="../output2.xlsx")
 
 
 
