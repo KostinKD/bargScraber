@@ -43,6 +43,21 @@ Type_Zones = {
 'камин' : 	24
 }
 
+Type_Services = {
+    'веники' : 11,
+    'банщик': 12,
+    'кальян':  13,
+    'ароматерапия' : 14,
+    'массажное кресло': 15,
+    'спатерапия': 16,
+    'музыкальный центр':17,
+    'банкеты':18,
+    'оздоровительный массаж':19,
+    'оплата картами':20,
+    'ароматерапия':21,
+    'акции и скидки':22
+}
+
 
 def bath_steam_room():
     row = 1
@@ -95,5 +110,29 @@ def bath_zone():
 
 
 
-bath_zone()
+# ##########################TYPE SERVICE
+def bath_services():
+    row = 1
+    for idx, cell in enumerate(worksheet['G'], start=1):
+        try:
+            values = [x.strip() for x in cell.value.split(',')]
+            print('Что в ячейке(массив): ', values)
+            print('Чистые значения: ', cell.value)
+            for words in values:
+                if words in Type_Services:
+                    print('Совпало в словаре')
+                    worksheet.cell(row=row, column=18).value = idx
+                    worksheet.cell(row=row, column=19).value = Type_Services[words]
+                    print('ID в словаре: ', Type_Services[words])
+                    row += 1
 
+            idx += 1
+            print('Индекс: ', idx)
+        except Exception as e:
+            print(e)
+            continue
+        time.sleep(0.5)
+        workbook.save(filename="DBImport/DBService.xlsx")
+
+
+bath_services()
